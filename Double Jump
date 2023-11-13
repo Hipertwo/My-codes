@@ -1,0 +1,28 @@
+-this only works in roblox studio/roblox games
+
+local function onCharacterAdded(character)
+    local humanoid = character:WaitForChild("Humanoid")
+    local canDoubleJump = false
+    local jumpCount = 0
+    
+    local function onJumpRequest()
+        jumpCount = jumpCount + 1
+        
+        if jumpCount <= 2 then
+            humanoid.Jump = true
+        end
+    end
+    
+    local function onStateChanged(state)
+        if state == Enum.HumanoidStateType.Landed then
+            jumpCount = 0
+        end
+    end
+    
+    humanoid.StateChanged:Connect(onStateChanged)
+    humanoid.Jumping:Connect(onJumpRequest)
+end
+
+game.Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(onCharacterAdded)
+end)
