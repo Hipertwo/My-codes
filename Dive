@@ -1,0 +1,35 @@
+-this script only works in roblox studio/roblox games
+
+local function onCharacterAdded(character)
+    local humanoid = character:WaitForChild("Humanoid")
+    local isDiving = false
+    
+    local function dive()
+        if isDiving then
+            return
+        end
+        
+        isDiving = true
+        
+        -- Play the diving animation
+        humanoid:LoadAnimation(script.Parent.DiveAnimation):Play()
+        
+        -- Adjust the dive duration based on the animation length
+        local animationLength = humanoid:FindFirstChild("DiveAnimation").Length
+        wait(animationLength)
+        
+        isDiving = false
+    end
+    
+    local function onKeyPress(input)
+        if input.KeyCode == Enum.KeyCode.R then
+            dive()
+        end
+    end
+    
+    game:GetService("UserInputService").InputBegan:Connect(onKeyPress)
+end
+
+game.Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(onCharacterAdded)
+end)
