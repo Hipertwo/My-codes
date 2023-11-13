@@ -1,0 +1,32 @@
+-this needs to be in roblox studio/roblox games to work
+
+local function onCharacterAdded(character)
+    local humanoid = character:WaitForChild("Humanoid")
+    local isDashing = false
+    local dashDistance = 5 -- Adjust this value to control the dash distance
+    
+    local function onKeyPress(input)
+        if input.KeyCode == Enum.KeyCode.E and not isDashing then
+            isDashing = true
+            local forwardVector = humanoid.RootPart.CFrame.lookVector
+            local dashPosition = humanoid.RootPart.Position + (forwardVector * dashDistance)
+            humanoid:MoveTo(dashPosition)
+            
+            wait(0.5) -- Adjust this value to control the duration of the dash
+            
+            isDashing = false
+        end
+    end
+    
+    humanoid.StateChanged:Connect(function(oldState, newState)
+        if newState == Enum.HumanoidStateType.Landed then
+            isDashing = false
+        end
+    end)
+    
+    game:GetService("UserInputService").InputBegan:Connect(onKeyPress)
+end
+
+game.Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(onCharacterAdded)
+end)
