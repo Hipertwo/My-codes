@@ -1,0 +1,24 @@
+-this needs to be in roblox studio/roblox games to work
+
+local function onCharacterAdded(character)
+    local humanoid = character:WaitForChild("Humanoid")
+    local originalTransparency = humanoid.RootPart.Transparency
+    local isInvisible = false
+    
+    local function toggleInvisibility()
+        isInvisible = not isInvisible
+        humanoid.RootPart.Transparency = isInvisible and 1 or originalTransparency
+    end
+    
+    local function onKeyPress(input)
+        if input.KeyCode == Enum.KeyCode.Q then
+            toggleInvisibility()
+        end
+    end
+    
+    game:GetService("UserInputService").InputBegan:Connect(onKeyPress)
+end
+
+game.Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(onCharacterAdded)
+end)
